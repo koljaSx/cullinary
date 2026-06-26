@@ -1,0 +1,5 @@
+nodeLinker: hoisted
+blockExoticSubdeps: false
+confirmModulesPurge: false
+minimumReleaseAgeExclude:
+  - electron@42.5.0

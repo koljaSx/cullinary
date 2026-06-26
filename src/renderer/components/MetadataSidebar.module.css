@@ -1,0 +1,41 @@
+.definitionList,
+.description {
+  margin: 0;
+}
+
+.description {
+  margin-bottom: 14px;
+  font-size: 13px;
+  color: var(--color-text);
+  overflow-wrap: anywhere;
+}
+
+.fileList {
+  padding: 0;
+  margin: 0;
+  list-style: none;
+}
+
+.fileListItem {
+  padding: 6px 0;
+  border-bottom: 1px solid var(--color-border);
+}
+
+.label {
+  margin-bottom: var(--space-1);
+  font-size: 12px;
+  color: var(--color-text-muted);
+}
+
+.sidebar {
+  width: 320px;
+  min-width: 300px;
+  padding: var(--space-5);
+  background: var(--color-panel);
+  border-left: 1px solid var(--color-border);
+}
+
+.title {
+  margin: 0 0 var(--space-5);
+  font-size: 15px;
+}

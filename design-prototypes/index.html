@@ -1,0 +1,244 @@
+<!doctype html>
+<html lang="en">
+  <head>
+    <meta charset="utf-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1" />
+    <title>Cullinary Design Prototypes</title>
+    <style>
+      :root {
+        color-scheme: light;
+        --bg: #f4f6f8;
+        --panel: #ffffff;
+        --text: #1e252b;
+        --muted: #6a747e;
+        --line: #d8dee5;
+        --accent: #0f6d68;
+      }
+
+      * {
+        box-sizing: border-box;
+      }
+
+      body {
+        min-height: 100vh;
+        margin: 0;
+        font-family:
+          Inter, ui-sans-serif, system-ui, -apple-system, BlinkMacSystemFont,
+          "Segoe UI", sans-serif;
+        color: var(--text);
+        letter-spacing: 0;
+        background: var(--bg);
+      }
+
+      main {
+        width: min(1100px, calc(100% - 40px));
+        margin: 0 auto;
+        padding: 48px 0;
+      }
+
+      header {
+        display: flex;
+        align-items: end;
+        justify-content: space-between;
+        gap: 24px;
+        margin-bottom: 28px;
+      }
+
+      h1 {
+        margin: 0 0 8px;
+        font-size: 32px;
+        line-height: 1.05;
+      }
+
+      p {
+        max-width: 660px;
+        margin: 0;
+        color: var(--muted);
+        line-height: 1.55;
+      }
+
+      .group-label {
+        margin: 30px 0 12px;
+        font-size: 13px;
+        font-weight: 700;
+        letter-spacing: 0.4px;
+        text-transform: uppercase;
+        color: var(--muted);
+      }
+
+      .grid {
+        display: grid;
+        grid-template-columns: repeat(auto-fill, minmax(195px, 1fr));
+        gap: 12px;
+      }
+
+      a {
+        display: grid;
+        min-height: 200px;
+        padding: 18px;
+        color: inherit;
+        text-decoration: none;
+        background: var(--panel);
+        border: 1px solid var(--line);
+        border-radius: 8px;
+      }
+
+      a:hover,
+      a:focus-visible {
+        border-color: var(--accent);
+        outline: none;
+      }
+
+      .number {
+        color: var(--accent);
+        font-size: 13px;
+        font-weight: 700;
+      }
+
+      h2 {
+        align-self: end;
+        margin: 0;
+        font-size: 19px;
+        line-height: 1.1;
+      }
+
+      .summary {
+        align-self: end;
+        margin-top: 18px;
+        font-size: 13px;
+        color: var(--muted);
+        line-height: 1.45;
+      }
+
+      .open {
+        align-self: end;
+        margin-top: 26px;
+        font-size: 13px;
+        font-weight: 700;
+        color: var(--accent);
+      }
+
+      @media (max-width: 960px) {
+        .grid {
+          grid-template-columns: repeat(2, minmax(0, 1fr));
+        }
+      }
+
+      @media (max-width: 620px) {
+        main {
+          width: min(100% - 24px, 1100px);
+          padding: 28px 0;
+        }
+
+        header {
+          display: block;
+        }
+
+        .grid {
+          grid-template-columns: 1fr;
+        }
+      }
+    </style>
+  </head>
+  <body>
+    <main>
+      <header>
+        <div>
+          <h1>Cullinary design prototypes</h1>
+          <p>
+            Ten static directions for the culling workspace. Each file is
+            standalone HTML so we can compare, remix, or discard quickly.
+          </p>
+        </div>
+      </header>
+
+      <h2 class="group-label">First batch</h2>
+      <section class="grid" aria-label="Design prototype links">
+        <a href="01-command-deck.html">
+          <span class="number">01</span>
+          <h2>Command Deck</h2>
+          <span class="summary"
+            >Dense dark workspace with a persistent action rail and inspector.</span
+          >
+          <span class="open">Open prototype</span>
+        </a>
+        <a href="02-light-table.html">
+          <span class="number">02</span>
+          <h2>Light Table</h2>
+          <span class="summary"
+            >Bright review surface with contact-sheet rhythm and quiet metadata.</span
+          >
+          <span class="open">Open prototype</span>
+        </a>
+        <a href="03-focus-mode.html">
+          <span class="number">03</span>
+          <h2>Focus Mode</h2>
+          <span class="summary"
+            >Full-bleed image review with floating controls and low chrome.</span
+          >
+          <span class="open">Open prototype</span>
+        </a>
+        <a href="04-grid-first.html">
+          <span class="number">04</span>
+          <h2>Grid First</h2>
+          <span class="summary"
+            >Batch triage board with selected-photo detail and quick filters.</span
+          >
+          <span class="open">Open prototype</span>
+        </a>
+        <a href="05-workbench.html">
+          <span class="number">05</span>
+          <h2>Workbench</h2>
+          <span class="summary"
+            >Process-oriented layout with queue, preview, decision stack, and plan.</span
+          >
+          <span class="open">Open prototype</span>
+        </a>
+      </section>
+
+      <h2 class="group-label">Second batch</h2>
+      <section class="grid" aria-label="Design prototype links, second batch">
+        <a href="06-stage-and-stack.html">
+          <span class="number">06</span>
+          <h2>Stage &amp; Stack</h2>
+          <span class="summary"
+            >Cinematic card deck with peeking neighbors and big swipe-style decisions.</span
+          >
+          <span class="open">Open prototype</span>
+        </a>
+        <a href="07-duel.html">
+          <span class="number">07</span>
+          <h2>Duel</h2>
+          <span class="summary"
+            >Side-by-side A/B compare for picking the keeper out of a burst.</span
+          >
+          <span class="open">Open prototype</span>
+        </a>
+        <a href="08-reel.html">
+          <span class="number">08</span>
+          <h2>Reel</h2>
+          <span class="summary"
+            >Vertical thumbnail rail, full preview, and a floating glass decision dock.</span
+          >
+          <span class="open">Open prototype</span>
+        </a>
+        <a href="09-cockpit.html">
+          <span class="number">09</span>
+          <h2>Cockpit</h2>
+          <span class="summary"
+            >Keyboard-first HUD with big keycaps and a monospace frame readout.</span
+          >
+          <span class="open">Open prototype</span>
+        </a>
+        <a href="10-atlas.html">
+          <span class="number">10</span>
+          <h2>Atlas</h2>
+          <span class="summary"
+            >Session dashboard with progress donut, tallies, hero asset, and move plan.</span
+          >
+          <span class="open">Open prototype</span>
+        </a>
+      </section>
+    </main>
+  </body>
+</html>

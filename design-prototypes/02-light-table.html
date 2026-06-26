@@ -1,0 +1,442 @@
+<!doctype html>
+<html lang="en">
+  <head>
+    <meta charset="utf-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1" />
+    <title>Cullinary Prototype 02 - Light Table</title>
+    <style>
+      :root {
+        color-scheme: light;
+        --bg: #f6f7f8;
+        --surface: #ffffff;
+        --paper: #fbfcfd;
+        --ink: #1f2529;
+        --muted: #66717a;
+        --subtle: #8a949e;
+        --line: #dce2e7;
+        --line-strong: #1f2529;
+        --teal: #0a7d75;
+        --coral: #d95e52;
+        --amber: #c68124;
+        --green: #248f59;
+      }
+
+      * {
+        box-sizing: border-box;
+      }
+
+      body {
+        min-width: 1080px;
+        height: 100vh;
+        margin: 0;
+        overflow: hidden;
+        font-family:
+          Inter, ui-sans-serif, system-ui, -apple-system, BlinkMacSystemFont,
+          "Segoe UI", sans-serif;
+        color: var(--ink);
+        letter-spacing: 0;
+        background: var(--bg);
+      }
+
+      button {
+        font: inherit;
+      }
+
+      .shell {
+        display: grid;
+        grid-template-columns: 248px minmax(0, 1fr) 292px;
+        grid-template-rows: 58px minmax(0, 1fr) 34px;
+        height: 100vh;
+      }
+
+      header {
+        grid-column: 1 / -1;
+        display: grid;
+        grid-template-columns: 248px minmax(0, 1fr) 292px;
+        align-items: center;
+        background: var(--surface);
+        border-bottom: 1px solid var(--line);
+      }
+
+      .brand {
+        padding: 0 18px;
+        font-size: 16px;
+        font-weight: 800;
+      }
+
+      .path {
+        min-width: 0;
+        overflow: hidden;
+        color: var(--muted);
+        font-size: 13px;
+        text-overflow: ellipsis;
+        white-space: nowrap;
+      }
+
+      .top-actions {
+        display: flex;
+        gap: 8px;
+        justify-content: flex-end;
+        padding: 0 14px;
+      }
+
+      .button {
+        display: inline-flex;
+        gap: 7px;
+        align-items: center;
+        height: 34px;
+        padding: 0 12px;
+        color: var(--ink);
+        cursor: pointer;
+        background: var(--paper);
+        border: 1px solid var(--line);
+        border-radius: 6px;
+      }
+
+      .button.primary {
+        color: #ffffff;
+        background: var(--teal);
+        border-color: var(--teal);
+      }
+
+      .contact-sheet {
+        display: grid;
+        grid-template-rows: auto minmax(0, 1fr);
+        min-height: 0;
+        background: var(--surface);
+        border-right: 1px solid var(--line);
+      }
+
+      .sheet-head {
+        display: flex;
+        align-items: center;
+        justify-content: space-between;
+        padding: 16px 14px 10px 18px;
+      }
+
+      .sheet-title {
+        margin: 0;
+        font-size: 13px;
+        font-weight: 800;
+      }
+
+      .count {
+        color: var(--muted);
+        font-size: 12px;
+      }
+
+      .sheet-grid {
+        display: grid;
+        grid-template-columns: repeat(2, minmax(0, 1fr));
+        gap: 9px;
+        align-content: start;
+        min-height: 0;
+        padding: 0 14px 16px 18px;
+        overflow: auto;
+      }
+
+      .tile {
+        position: relative;
+        aspect-ratio: 1 / 0.78;
+        overflow: hidden;
+        background: var(--tile);
+        border: 2px solid transparent;
+        border-radius: 6px;
+      }
+
+      .tile.selected {
+        border-color: var(--line-strong);
+      }
+
+      .mark {
+        position: absolute;
+        right: 6px;
+        bottom: 6px;
+        min-width: 24px;
+        height: 18px;
+        padding: 0 6px;
+        color: #ffffff;
+        font-size: 11px;
+        font-weight: 800;
+        line-height: 18px;
+        text-align: center;
+        background: var(--mark);
+        border-radius: 999px;
+      }
+
+      .review {
+        display: grid;
+        grid-template-rows: minmax(0, 1fr) 86px;
+        min-width: 0;
+        min-height: 0;
+        background: #eef2f4;
+      }
+
+      .image-wrap {
+        display: grid;
+        min-height: 0;
+        padding: 28px;
+        place-items: center;
+      }
+
+      .large-photo {
+        position: relative;
+        width: min(100%, 920px);
+        height: min(100%, 620px);
+        overflow: hidden;
+        background:
+          linear-gradient(180deg, rgba(255, 255, 255, 0.16), transparent 42%),
+          linear-gradient(28deg, #203937 0 22%, #608781 23% 48%, #cbdedc 49% 100%);
+        border: 1px solid #cdd5db;
+        border-radius: 4px;
+        box-shadow: 0 20px 70px rgba(32, 38, 44, 0.18);
+      }
+
+      .large-photo::before {
+        position: absolute;
+        inset: auto 0 0;
+        height: 42%;
+        content: "";
+        background:
+          linear-gradient(130deg, transparent 0 35%, rgba(255, 255, 255, 0.28) 36% 37%, transparent 38%),
+          linear-gradient(15deg, #214134 0 40%, #7d9c78 41% 62%, #425d46 63% 100%);
+      }
+
+      .large-photo::after {
+        position: absolute;
+        top: 13%;
+        left: 19%;
+        width: 76px;
+        height: 76px;
+        content: "";
+        background: rgba(255, 246, 198, 0.72);
+        border-radius: 999px;
+      }
+
+      .caption-bar {
+        display: flex;
+        align-items: center;
+        justify-content: space-between;
+        padding: 0 28px;
+        background: var(--surface);
+        border-top: 1px solid var(--line);
+      }
+
+      .asset-name {
+        display: grid;
+        gap: 4px;
+      }
+
+      .asset-name strong {
+        font-size: 15px;
+      }
+
+      .asset-name span {
+        color: var(--muted);
+        font-size: 12px;
+      }
+
+      .decisions {
+        display: flex;
+        gap: 8px;
+        align-items: center;
+      }
+
+      .decision {
+        height: 38px;
+        min-width: 80px;
+        padding: 0 14px;
+        cursor: pointer;
+        background: transparent;
+        border: 1px solid var(--line);
+        border-radius: 6px;
+      }
+
+      .decision.keep {
+        color: #ffffff;
+        background: var(--green);
+        border-color: var(--green);
+      }
+
+      .decision.edit {
+        color: var(--amber);
+        border-color: rgba(198, 129, 36, 0.5);
+      }
+
+      .decision.reject {
+        color: var(--coral);
+        border-color: rgba(217, 94, 82, 0.45);
+      }
+
+      aside {
+        display: grid;
+        grid-template-rows: auto minmax(0, 1fr);
+        min-height: 0;
+        background: var(--surface);
+        border-left: 1px solid var(--line);
+      }
+
+      .inspector-head {
+        padding: 18px;
+        border-bottom: 1px solid var(--line);
+      }
+
+      h2 {
+        margin: 0 0 8px;
+        font-size: 15px;
+      }
+
+      .progress {
+        height: 8px;
+        overflow: hidden;
+        background: #e9eef1;
+        border-radius: 999px;
+      }
+
+      .progress span {
+        display: block;
+        width: 28%;
+        height: 100%;
+        background: var(--teal);
+      }
+
+      .details {
+        display: grid;
+        gap: 18px;
+        align-content: start;
+        padding: 18px;
+        overflow: auto;
+      }
+
+      .detail {
+        display: grid;
+        gap: 4px;
+      }
+
+      .detail dt {
+        color: var(--subtle);
+        font-size: 12px;
+      }
+
+      .detail dd {
+        margin: 0;
+        overflow-wrap: anywhere;
+        font-size: 13px;
+      }
+
+      footer {
+        grid-column: 1 / -1;
+        display: flex;
+        align-items: center;
+        justify-content: space-between;
+        min-width: 0;
+        padding: 0 14px;
+        color: var(--muted);
+        font-size: 12px;
+        background: var(--surface);
+        border-top: 1px solid var(--line);
+      }
+
+      footer span {
+        min-width: 0;
+        overflow: hidden;
+        text-overflow: ellipsis;
+        white-space: nowrap;
+      }
+
+      .a { --tile: linear-gradient(28deg, #203937 0 22%, #608781 23% 48%, #cbdedc 49% 100%); --mark: var(--green); }
+      .b { --tile: linear-gradient(150deg, #4c2732 0 34%, #c06d5e 35% 58%, #f0cfc7 59% 100%); --mark: var(--amber); }
+      .c { --tile: linear-gradient(35deg, #26313b 0 38%, #668199 39% 66%, #d8e3ea 67% 100%); }
+      .d { --tile: linear-gradient(140deg, #2f2441 0 29%, #735f97 30% 57%, #ddd8ed 58% 100%); --mark: var(--coral); }
+      .e { --tile: linear-gradient(30deg, #283d2b 0 32%, #769d5e 33% 61%, #dce7ce 62% 100%); --mark: var(--green); }
+      .f { --tile: linear-gradient(145deg, #2a3436 0 38%, #5f797c 39% 62%, #d8e1df 63% 100%); }
+      .g { --tile: linear-gradient(30deg, #393027 0 33%, #928054 34% 61%, #d7dfb9 62% 100%); --mark: var(--green); }
+      .h { --tile: linear-gradient(135deg, #2e343d 0 34%, #586c84 35% 58%, #cbd9df 59% 100%); }
+    </style>
+  </head>
+  <body>
+    <div class="shell">
+      <header>
+        <div class="brand">Cullinary</div>
+        <div class="path">/Volumes/Photo/Ingest/2026-06-24 Ridge Session</div>
+        <div class="top-actions">
+          <button class="button" type="button">Open</button>
+          <button class="button" type="button">Rescan</button>
+          <button class="button primary" type="button">Move Plan</button>
+        </div>
+      </header>
+
+      <section class="contact-sheet" aria-label="Contact sheet">
+        <div class="sheet-head">
+          <h1 class="sheet-title">Session</h1>
+          <span class="count">37 / 142</span>
+        </div>
+        <div class="sheet-grid">
+          <div class="tile a selected"><span class="mark">K</span></div>
+          <div class="tile b"><span class="mark">E</span></div>
+          <div class="tile c"></div>
+          <div class="tile d"><span class="mark">X</span></div>
+          <div class="tile e"><span class="mark">K</span></div>
+          <div class="tile f"></div>
+          <div class="tile g"><span class="mark">K</span></div>
+          <div class="tile h"></div>
+          <div class="tile b"></div>
+          <div class="tile c"></div>
+          <div class="tile e"></div>
+          <div class="tile f"></div>
+        </div>
+      </section>
+
+      <main class="review">
+        <div class="image-wrap">
+          <div class="large-photo" role="img" aria-label="Selected landscape photo mock preview"></div>
+        </div>
+        <div class="caption-bar">
+          <div class="asset-name">
+            <strong>DSC08421.ARW</strong>
+            <span>RAW + JPEG + XMP</span>
+          </div>
+          <div class="decisions" aria-label="Decision controls">
+            <button class="decision keep" type="button">Keep</button>
+            <button class="decision edit" type="button">Edit</button>
+            <button class="decision reject" type="button">Reject</button>
+          </div>
+        </div>
+      </main>
+
+      <aside aria-label="Image metadata">
+        <div class="inspector-head">
+          <h2>Marked</h2>
+          <div class="progress"><span></span></div>
+        </div>
+        <dl class="details">
+          <div class="detail">
+            <dt>Decision</dt>
+            <dd>Keep</dd>
+          </div>
+          <div class="detail">
+            <dt>Captured</dt>
+            <dd>24 Jun 2026, 19:42</dd>
+          </div>
+          <div class="detail">
+            <dt>Camera</dt>
+            <dd>Sony A7 IV</dd>
+          </div>
+          <div class="detail">
+            <dt>Files</dt>
+            <dd>DSC08421.ARW<br />DSC08421.JPG<br />DSC08421.XMP</dd>
+          </div>
+          <div class="detail">
+            <dt>Move Plan</dt>
+            <dd>Keep 24, Edit 9, Reject 4</dd>
+          </div>
+        </dl>
+      </aside>
+
+      <footer>
+        <span>Ready</span>
+        <span>0 conflicts</span>
+      </footer>
+    </div>
+  </body>
+</html>

@@ -1,0 +1,134 @@
+{
+  "$schema": "./node_modules/@biomejs/biome/configuration_schema.json",
+  "assist": {
+    "actions": {
+      "source": {
+        "organizeImports": "on",
+        "useSortedAttributes": "on",
+        "useSortedKeys": "on",
+        "useSortedPackageJson": "on",
+        "useSortedProperties": "on"
+      }
+    },
+    "enabled": true
+  },
+  "files": {
+    "ignoreUnknown": true,
+    "includes": [
+      "package.json",
+      "biome.jsonc",
+      "index.html",
+      "forge.config.ts",
+      "vite.main.config.ts",
+      "vite.preload.config.ts",
+      "vite.renderer.config.ts",
+      "vitest.config.ts",
+      "src/**/*.css",
+      "src/**/*.ts",
+      "src/**/*.tsx",
+      "scripts/**/*.mjs",
+      "!!**/.pnpm-store"
+    ]
+  },
+  "formatter": {
+    "attributePosition": "auto",
+    "bracketSameLine": false,
+    "bracketSpacing": true,
+    "enabled": true,
+    "expand": "auto",
+    "formatWithErrors": false,
+    "indentStyle": "space",
+    "indentWidth": 2,
+    "lineEnding": "lf"
+  },
+  "html": {
+    "formatter": {
+      "selfCloseVoidElements": "always"
+    }
+  },
+  "javascript": {
+    "formatter": {
+      "arrowParentheses": "always",
+      "attributePosition": "auto",
+      "bracketSameLine": false,
+      "bracketSpacing": true,
+      "jsxQuoteStyle": "double",
+      "quoteProperties": "asNeeded",
+      "quoteStyle": "single",
+      "semicolons": "always",
+      "trailingCommas": "all"
+    },
+    "globals": ["MAIN_WINDOW_VITE_DEV_SERVER_URL", "MAIN_WINDOW_VITE_NAME"],
+    "jsxRuntime": "transparent"
+  },
+  "linter": {
+    "domains": {
+      "react": "recommended"
+    },
+    "rules": {
+      "complexity": {
+        "noAdjacentSpacesInRegex": "error",
+        "noBannedTypes": "error",
+        "noExcessiveCognitiveComplexity": "warn",
+        "noExtraBooleanCast": "error",
+        "noStaticOnlyClass": "error",
+        "noUselessCatch": "error",
+        "noUselessEscapeInRegex": "error",
+        "noUselessFragments": "error",
+        "noUselessSwitchCase": "error",
+        "noUselessTypeConstraint": "error",
+        "useDateNow": "error",
+        "useFlatMap": "error",
+        "useOptionalChain": "error"
+      },
+      "correctness": {
+        "noInvalidConstructorSuper": "error",
+        "noReactPropAssignments": "error",
+        "noUndeclaredVariables": "on",
+        "noUnusedFunctionParameters": "error",
+        "noUnusedImports": "error",
+        "noUnusedVariables": "error"
+      },
+      "performance": { "noAccumulatingSpread": "error" },
+      "preset": "recommended",
+      "security": {
+        "noDangerouslySetInnerHtmlWithChildren": "error",
+        "noGlobalEval": "error",
+        "noSecrets": "error"
+      },
+      "suspicious": {
+        "noCatchAssign": "error",
+        "noConfusingVoidType": "error",
+        "noExplicitAny": "error",
+        "noExtraNonNullAssertion": "error",
+        "noIrregularWhitespace": "error",
+        "noPrototypeBuiltins": "error",
+        "noSelfCompare": "error",
+        "noShadowRestrictedNames": "off",
+        "useAwait": "error",
+        "useErrorMessage": "error",
+        "useIsArray": "error",
+        "useNumberToFixedDigitsArgument": "error"
+      }
+    }
+  },
+  "overrides": [
+    {
+      "assist": {
+        "actions": {
+          "source": {
+            "useSortedKeys": "off",
+            "useSortedPackageJson": "on"
+          }
+        }
+      },
+      "includes": ["package.json"]
+    }
+  ],
+  "vcs": {
+    "clientKind": "git",
+    "defaultBranch": "main",
+    "enabled": true,
+    "useIgnoreFile": true
+  }
+}

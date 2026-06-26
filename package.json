@@ -1,0 +1,46 @@
+{
+  "name": "cullinary",
+  "version": "0.1.0",
+  "private": true,
+  "description": "A Electron app for fast RAW and JPEG photo triage.",
+  "keywords": ["electron", "photos", "raw", "lightroom"],
+  "license": "MIT",
+  "author": {
+    "name": "Kolja Schoenig"
+  },
+  "main": ".vite/build/main.js",
+  "scripts": {
+    "check": "tsc --noEmit",
+    "lint": "biome check",
+    "lint:fix": "biome check --write",
+    "make": "electron-forge make",
+    "package": "electron-forge package",
+    "package:local": "node scripts/package-local.mjs",
+    "start": "electron-forge start",
+    "test": "vitest run",
+    "test:watch": "vitest"
+  },
+  "dependencies": {
+    "exiftool-vendored": "^36.0.0",
+    "lucide-react": "^1.21.0",
+    "react": "^19.2.7",
+    "react-dom": "^19.2.7"
+  },
+  "devDependencies": {
+    "@biomejs/biome": "2.5.1",
+    "@electron-forge/cli": "^7.11.2",
+    "@electron-forge/maker-zip": "^7.11.2",
+    "@electron-forge/plugin-auto-unpack-natives": "^7.11.2",
+    "@electron-forge/plugin-vite": "^7.11.2",
+    "@electron-forge/shared-types": "^7.11.2",
+    "@types/node": "^26.0.0",
+    "@types/react": "^19.2.17",
+    "@types/react-dom": "^19.2.3",
+    "@vitejs/plugin-react": "^6.0.3",
+    "electron": "^42.5.0",
+    "typescript": "^6.0.3",
+    "vite": "^8.1.0",
+    "vitest": "^4.1.9"
+  },
+  "productName": "Cullinary"
+}

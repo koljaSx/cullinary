@@ -1,0 +1,31 @@
+:root {
+  font-family: var(--font-sans);
+  font-synthesis: none;
+  color: var(--color-text);
+  background: var(--color-app-bg);
+  text-rendering: optimizeLegibility;
+}
+
+* {
+  box-sizing: border-box;
+}
+
+html,
+body,
+#root {
+  height: 100%;
+}
+
+body {
+  margin: 0;
+  overflow: hidden;
+}
+
+button {
+  font: inherit;
+  color: inherit;
+}
+
+img {
+  display: block;
+}

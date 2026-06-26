@@ -1,0 +1,515 @@
+<!doctype html>
+<html lang="en">
+  <head>
+    <meta charset="utf-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1" />
+    <title>Cullinary Prototype 01 - Command Deck</title>
+    <style>
+      :root {
+        color-scheme: dark;
+        --bg: #0c0f0e;
+        --canvas: #080909;
+        --panel: #151918;
+        --panel-2: #1d2421;
+        --line: #2c3431;
+        --line-strong: #edf4ef;
+        --text: #eef4f0;
+        --muted: #a2aea7;
+        --subtle: #68736d;
+        --keep: #42b174;
+        --edit: #d8963b;
+        --reject: #d85b63;
+        --focus: #80bcff;
+      }
+
+      * {
+        box-sizing: border-box;
+      }
+
+      body {
+        min-width: 1080px;
+        height: 100vh;
+        margin: 0;
+        overflow: hidden;
+        font-family:
+          Inter, ui-sans-serif, system-ui, -apple-system, BlinkMacSystemFont,
+          "Segoe UI", sans-serif;
+        color: var(--text);
+        letter-spacing: 0;
+        background: var(--bg);
+      }
+
+      button {
+        font: inherit;
+      }
+
+      .shell {
+        display: grid;
+        grid-template-columns: 68px minmax(0, 1fr) 320px;
+        grid-template-rows: 56px minmax(0, 1fr) 116px 30px;
+        height: 100vh;
+      }
+
+      .rail {
+        grid-row: 1 / -1;
+        display: grid;
+        grid-template-rows: 56px minmax(0, 1fr) auto;
+        justify-items: center;
+        background: #101412;
+        border-right: 1px solid var(--line);
+      }
+
+      .logo {
+        display: grid;
+        width: 32px;
+        height: 32px;
+        margin-top: 12px;
+        place-items: center;
+        color: #0c0f0e;
+        font-weight: 800;
+        background: #eff5ef;
+        border-radius: 8px;
+      }
+
+      .rail-actions,
+      .rail-bottom {
+        display: grid;
+        gap: 10px;
+        align-content: start;
+        padding: 12px 0;
+      }
+
+      .icon-button {
+        display: grid;
+        width: 40px;
+        height: 40px;
+        place-items: center;
+        color: var(--muted);
+        cursor: pointer;
+        background: transparent;
+        border: 1px solid transparent;
+        border-radius: 8px;
+      }
+
+      .icon-button.active,
+      .icon-button:hover {
+        color: var(--text);
+        background: var(--panel-2);
+        border-color: var(--line);
+      }
+
+      .topbar {
+        grid-column: 2 / 3;
+        display: flex;
+        align-items: center;
+        justify-content: space-between;
+        min-width: 0;
+        padding: 0 16px;
+        background: var(--panel);
+        border-bottom: 1px solid var(--line);
+      }
+
+      .session {
+        min-width: 0;
+      }
+
+      .folder {
+        overflow: hidden;
+        font-size: 13px;
+        color: var(--muted);
+        text-overflow: ellipsis;
+        white-space: nowrap;
+      }
+
+      .title-row {
+        display: flex;
+        gap: 10px;
+        align-items: center;
+      }
+
+      h1 {
+        margin: 0;
+        font-size: 15px;
+        line-height: 1.2;
+      }
+
+      .pill {
+        display: inline-flex;
+        align-items: center;
+        height: 22px;
+        padding: 0 9px;
+        color: var(--muted);
+        font-size: 12px;
+        border: 1px solid var(--line);
+        border-radius: 999px;
+      }
+
+      .toolbar {
+        display: flex;
+        gap: 8px;
+        align-items: center;
+      }
+
+      .tool {
+        display: inline-flex;
+        gap: 8px;
+        align-items: center;
+        height: 34px;
+        padding: 0 12px;
+        color: var(--text);
+        cursor: pointer;
+        background: var(--panel-2);
+        border: 1px solid #35403b;
+        border-radius: 6px;
+      }
+
+      .tool.secondary {
+        color: var(--muted);
+        background: transparent;
+      }
+
+      .stage {
+        position: relative;
+        grid-column: 2 / 3;
+        display: grid;
+        min-width: 0;
+        min-height: 0;
+        place-items: center;
+        overflow: hidden;
+        background: var(--canvas);
+      }
+
+      .photo {
+        position: relative;
+        width: min(78vw, 960px);
+        height: min(66vh, 620px);
+        overflow: hidden;
+        background:
+          radial-gradient(circle at 24% 24%, rgba(246, 246, 235, 0.85) 0 7%, transparent 8%),
+          linear-gradient(160deg, transparent 0 48%, rgba(5, 30, 20, 0.42) 49% 100%),
+          linear-gradient(24deg, #182d28 0 26%, #35564f 27% 46%, #8f9384 47% 59%, #ccd7d0 60% 100%);
+        border: 1px solid #222a27;
+        border-radius: 4px;
+        box-shadow: 0 28px 90px rgba(0, 0, 0, 0.5);
+      }
+
+      .photo::before,
+      .photo::after {
+        position: absolute;
+        right: 0;
+        bottom: 0;
+        left: 0;
+        height: 34%;
+        content: "";
+      }
+
+      .photo::before {
+        background:
+          linear-gradient(140deg, transparent 0 28%, rgba(255, 255, 255, 0.14) 29% 31%, transparent 32%),
+          linear-gradient(20deg, #0d1814 0 38%, #223d33 39% 62%, #13241d 63% 100%);
+      }
+
+      .photo::after {
+        height: 19%;
+        background: linear-gradient(180deg, transparent, rgba(0, 0, 0, 0.5));
+      }
+
+      .decision-flag {
+        position: absolute;
+        top: 18px;
+        left: 18px;
+        display: inline-flex;
+        gap: 8px;
+        align-items: center;
+        height: 34px;
+        padding: 0 12px;
+        color: #06100a;
+        font-size: 13px;
+        font-weight: 800;
+        background: var(--keep);
+        border-radius: 6px;
+      }
+
+      .image-meta {
+        position: absolute;
+        right: 18px;
+        bottom: 18px;
+        display: flex;
+        gap: 10px;
+        align-items: center;
+        height: 32px;
+        padding: 0 10px;
+        color: #e7efe8;
+        font-size: 12px;
+        background: rgba(8, 9, 9, 0.68);
+        border: 1px solid rgba(255, 255, 255, 0.12);
+        border-radius: 6px;
+      }
+
+      .inspector {
+        grid-column: 3 / 4;
+        grid-row: 1 / 4;
+        display: grid;
+        grid-template-rows: auto minmax(0, 1fr) auto;
+        min-height: 0;
+        background: var(--panel);
+        border-left: 1px solid var(--line);
+      }
+
+      .inspector-head {
+        padding: 18px;
+        border-bottom: 1px solid var(--line);
+      }
+
+      .inspector h2 {
+        margin: 0 0 4px;
+        font-size: 15px;
+      }
+
+      .filename {
+        color: var(--muted);
+        font-size: 13px;
+      }
+
+      .metadata {
+        display: grid;
+        gap: 17px;
+        align-content: start;
+        padding: 18px;
+        overflow: auto;
+      }
+
+      .data-row {
+        display: grid;
+        gap: 4px;
+      }
+
+      .label {
+        color: var(--subtle);
+        font-size: 12px;
+      }
+
+      .value {
+        overflow-wrap: anywhere;
+        font-size: 13px;
+      }
+
+      .decision-stack {
+        display: grid;
+        grid-template-columns: repeat(3, minmax(0, 1fr));
+        gap: 8px;
+        padding: 18px;
+        border-top: 1px solid var(--line);
+      }
+
+      .decision {
+        height: 40px;
+        color: var(--text);
+        cursor: pointer;
+        background: transparent;
+        border: 1px solid var(--line);
+        border-radius: 6px;
+      }
+
+      .decision.keep {
+        color: #0c2014;
+        background: var(--keep);
+        border-color: var(--keep);
+      }
+
+      .decision.edit {
+        border-color: rgba(216, 150, 59, 0.6);
+      }
+
+      .decision.reject {
+        border-color: rgba(216, 91, 99, 0.6);
+      }
+
+      .filmstrip {
+        grid-column: 2 / 3;
+        display: flex;
+        gap: 10px;
+        align-items: center;
+        min-width: 0;
+        padding: 12px 16px;
+        overflow-x: auto;
+        background: var(--panel);
+        border-top: 1px solid var(--line);
+      }
+
+      .thumb {
+        position: relative;
+        flex: 0 0 94px;
+        height: 78px;
+        overflow: hidden;
+        background: #2d3934;
+        border: 2px solid transparent;
+        border-radius: 6px;
+      }
+
+      .thumb.current {
+        border-color: var(--line-strong);
+      }
+
+      .thumb::before {
+        position: absolute;
+        inset: 0;
+        content: "";
+        background: var(--thumb);
+      }
+
+      .thumb::after {
+        position: absolute;
+        right: 6px;
+        bottom: 6px;
+        width: 12px;
+        height: 12px;
+        content: "";
+        background: var(--dot, transparent);
+        border-radius: 999px;
+      }
+
+      .t1 { --thumb: linear-gradient(28deg, #16251f 0 30%, #496e62 31% 58%, #d7dbcf 59% 100%); --dot: var(--keep); }
+      .t2 { --thumb: linear-gradient(150deg, #51232a 0 38%, #d78950 39% 58%, #ebd6b9 59% 100%); --dot: var(--edit); }
+      .t3 { --thumb: linear-gradient(23deg, #14171c 0 42%, #43546b 43% 70%, #c3d5e2 71% 100%); }
+      .t4 { --thumb: linear-gradient(135deg, #211820 0 28%, #814f6d 29% 54%, #f2d7de 55% 100%); --dot: var(--reject); }
+      .t5 { --thumb: linear-gradient(35deg, #1c2619 0 45%, #698554 46% 68%, #e0ead0 69% 100%); --dot: var(--keep); }
+      .t6 { --thumb: linear-gradient(150deg, #171b16 0 35%, #4c6554 36% 62%, #bec9bd 63% 100%); }
+      .t7 { --thumb: linear-gradient(24deg, #182d28 0 26%, #35564f 27% 46%, #ccd7d0 47% 100%); --dot: var(--keep); }
+      .t8 { --thumb: linear-gradient(150deg, #241c18 0 30%, #806f48 31% 54%, #cbd3b4 55% 100%); }
+
+      .statusbar {
+        grid-column: 2 / 4;
+        display: flex;
+        align-items: center;
+        justify-content: space-between;
+        min-width: 0;
+        padding: 0 12px;
+        color: var(--muted);
+        font-size: 12px;
+        background: #101412;
+        border-top: 1px solid var(--line);
+      }
+
+      .statusbar span {
+        min-width: 0;
+        overflow: hidden;
+        text-overflow: ellipsis;
+        white-space: nowrap;
+      }
+
+      svg {
+        display: block;
+      }
+    </style>
+  </head>
+  <body>
+    <div class="shell">
+      <nav class="rail" aria-label="Primary">
+        <div class="logo">C</div>
+        <div class="rail-actions">
+          <button class="icon-button active" aria-label="Open folder">
+            <svg width="18" height="18" viewBox="0 0 24 24" aria-hidden="true">
+              <path d="M3 6.5h6l2 2h10v9.5a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2z" fill="none" stroke="currentColor" stroke-width="2" />
+            </svg>
+          </button>
+          <button class="icon-button" aria-label="Rescan">
+            <svg width="18" height="18" viewBox="0 0 24 24" aria-hidden="true">
+              <path d="M20 12a8 8 0 1 1-2.4-5.7M20 4v6h-6" fill="none" stroke="currentColor" stroke-width="2" />
+            </svg>
+          </button>
+          <button class="icon-button" aria-label="Move plan">
+            <svg width="18" height="18" viewBox="0 0 24 24" aria-hidden="true">
+              <path d="M5 6h6M5 18h6M13 6h3a3 3 0 0 1 0 6h-8a3 3 0 0 0 0 6h3" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" />
+            </svg>
+          </button>
+        </div>
+        <div class="rail-bottom">
+          <button class="icon-button" aria-label="Metadata">
+            <svg width="18" height="18" viewBox="0 0 24 24" aria-hidden="true">
+              <path d="M4 5h16M4 12h10M4 19h16" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" />
+            </svg>
+          </button>
+        </div>
+      </nav>
+
+      <header class="topbar">
+        <div class="session">
+          <div class="title-row">
+            <h1>Cullinary</h1>
+            <span class="pill">142 assets</span>
+            <span class="pill">37 marked</span>
+          </div>
+          <div class="folder">/Volumes/Photo/Ingest/2026-06-24 Ridge Session</div>
+        </div>
+        <div class="toolbar">
+          <button class="tool secondary" type="button">Rescan</button>
+          <button class="tool" type="button">Move Plan</button>
+        </div>
+      </header>
+
+      <main class="stage">
+        <div class="photo" role="img" aria-label="Selected landscape photo mock preview">
+          <span class="decision-flag">Keep</span>
+          <span class="image-meta">DSC08421.ARW <strong>37 / 142</strong></span>
+        </div>
+      </main>
+
+      <aside class="inspector" aria-label="Image metadata">
+        <div class="inspector-head">
+          <h2>Selection</h2>
+          <div class="filename">DSC08421.ARW</div>
+        </div>
+        <div class="metadata">
+          <div class="data-row">
+            <span class="label">Decision</span>
+            <span class="value">Keep</span>
+          </div>
+          <div class="data-row">
+            <span class="label">Type</span>
+            <span class="value">RAW + JPEG + XMP</span>
+          </div>
+          <div class="data-row">
+            <span class="label">Captured</span>
+            <span class="value">24 Jun 2026, 19:42</span>
+          </div>
+          <div class="data-row">
+            <span class="label">Camera</span>
+            <span class="value">Sony A7 IV</span>
+          </div>
+          <div class="data-row">
+            <span class="label">Files</span>
+            <span class="value">DSC08421.ARW<br />DSC08421.JPG<br />DSC08421.XMP</span>
+          </div>
+          <div class="data-row">
+            <span class="label">Move Plan</span>
+            <span class="value">Keep 24, Edit 9, Reject 4</span>
+          </div>
+        </div>
+        <div class="decision-stack" aria-label="Decision controls">
+          <button class="decision keep" type="button">Keep</button>
+          <button class="decision edit" type="button">Edit</button>
+          <button class="decision reject" type="button">Reject</button>
+        </div>
+      </aside>
+
+      <section class="filmstrip" aria-label="Photo filmstrip">
+        <span class="thumb t1 current"></span>
+        <span class="thumb t2"></span>
+        <span class="thumb t3"></span>
+        <span class="thumb t4"></span>
+        <span class="thumb t5"></span>
+        <span class="thumb t6"></span>
+        <span class="thumb t7"></span>
+        <span class="thumb t8"></span>
+        <span class="thumb t2"></span>
+        <span class="thumb t3"></span>
+      </section>
+
+      <footer class="statusbar">
+        <span>Ready</span>
+        <span>Preview cache warm - 0 conflicts</span>
+      </footer>
+    </div>
+  </body>
+</html>

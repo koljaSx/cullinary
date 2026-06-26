@@ -1,0 +1,550 @@
+<!doctype html>
+<html lang="en">
+  <head>
+    <meta charset="utf-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1" />
+    <title>Cullinary Prototype 05 - Workbench</title>
+    <style>
+      :root {
+        color-scheme: dark;
+        --bg: #111313;
+        --panel: #191d1c;
+        --panel-2: #222725;
+        --canvas: #0a0b0b;
+        --line: #303735;
+        --text: #f0f4f1;
+        --muted: #a6b0aa;
+        --subtle: #747f79;
+        --green: #35b974;
+        --amber: #d89435;
+        --red: #d75e66;
+        --blue: #73a9ff;
+      }
+
+      * {
+        box-sizing: border-box;
+      }
+
+      body {
+        min-width: 1080px;
+        height: 100vh;
+        margin: 0;
+        overflow: hidden;
+        font-family:
+          Inter, ui-sans-serif, system-ui, -apple-system, BlinkMacSystemFont,
+          "Segoe UI", sans-serif;
+        color: var(--text);
+        letter-spacing: 0;
+        background: var(--bg);
+      }
+
+      button {
+        font: inherit;
+      }
+
+      .shell {
+        display: grid;
+        grid-template-columns: 236px minmax(0, 1fr) 306px;
+        grid-template-rows: 58px minmax(0, 1fr) 34px;
+        height: 100vh;
+      }
+
+      header {
+        grid-column: 1 / -1;
+        display: flex;
+        align-items: center;
+        justify-content: space-between;
+        gap: 18px;
+        min-width: 0;
+        padding: 0 16px;
+        background: var(--panel);
+        border-bottom: 1px solid var(--line);
+      }
+
+      .brand {
+        display: flex;
+        gap: 14px;
+        align-items: center;
+        min-width: 0;
+      }
+
+      .brand-icon {
+        display: grid;
+        width: 34px;
+        height: 34px;
+        place-items: center;
+        color: #08100c;
+        font-weight: 900;
+        background: #ecf4ef;
+        border-radius: 8px;
+      }
+
+      .brand h1 {
+        margin: 0 0 3px;
+        font-size: 16px;
+      }
+
+      .brand span {
+        display: block;
+        overflow: hidden;
+        max-width: 560px;
+        color: var(--muted);
+        font-size: 12px;
+        text-overflow: ellipsis;
+        white-space: nowrap;
+      }
+
+      .actions {
+        display: flex;
+        gap: 8px;
+        align-items: center;
+      }
+
+      .button {
+        height: 34px;
+        padding: 0 12px;
+        color: var(--text);
+        cursor: pointer;
+        background: var(--panel-2);
+        border: 1px solid #39423e;
+        border-radius: 6px;
+      }
+
+      .button.primary {
+        color: #05100a;
+        background: var(--green);
+        border-color: var(--green);
+      }
+
+      .queue {
+        display: grid;
+        grid-template-rows: auto minmax(0, 1fr);
+        min-height: 0;
+        background: #151918;
+        border-right: 1px solid var(--line);
+      }
+
+      .queue-head {
+        padding: 16px 14px;
+        border-bottom: 1px solid var(--line);
+      }
+
+      .queue-head h2,
+      .plan h2,
+      .decision-panel h2 {
+        margin: 0 0 5px;
+        font-size: 14px;
+      }
+
+      .queue-head span,
+      .plan p,
+      .decision-panel p {
+        margin: 0;
+        color: var(--muted);
+        font-size: 12px;
+      }
+
+      .queue-list {
+        display: grid;
+        gap: 8px;
+        align-content: start;
+        min-height: 0;
+        padding: 12px;
+        overflow: auto;
+      }
+
+      .queue-item {
+        display: grid;
+        grid-template-columns: 54px minmax(0, 1fr) auto;
+        gap: 10px;
+        align-items: center;
+        min-height: 58px;
+        padding: 6px;
+        background: transparent;
+        border: 1px solid transparent;
+        border-radius: 8px;
+      }
+
+      .queue-item.active {
+        background: var(--panel-2);
+        border-color: #434c48;
+      }
+
+      .mini {
+        width: 54px;
+        height: 42px;
+        background: var(--img);
+        border-radius: 5px;
+      }
+
+      .queue-copy {
+        min-width: 0;
+      }
+
+      .queue-copy strong {
+        display: block;
+        overflow: hidden;
+        font-size: 12px;
+        text-overflow: ellipsis;
+        white-space: nowrap;
+      }
+
+      .queue-copy span {
+        color: var(--subtle);
+        font-size: 11px;
+      }
+
+      .dot {
+        width: 10px;
+        height: 10px;
+        background: var(--dot, transparent);
+        border-radius: 999px;
+      }
+
+      .main {
+        display: grid;
+        grid-template-rows: minmax(0, 1fr) 132px;
+        min-width: 0;
+        min-height: 0;
+      }
+
+      .review {
+        display: grid;
+        min-height: 0;
+        padding: 20px;
+        place-items: center;
+        background: var(--canvas);
+      }
+
+      .photo {
+        position: relative;
+        width: min(100%, 1000px);
+        height: min(100%, 650px);
+        overflow: hidden;
+        background:
+          radial-gradient(circle at 24% 19%, rgba(255, 244, 200, 0.72) 0 6%, transparent 7%),
+          linear-gradient(30deg, #1b2d27 0 30%, #476b60 31% 55%, #d0ded8 56% 100%);
+        border: 1px solid #242c29;
+        border-radius: 4px;
+        box-shadow: 0 26px 80px rgba(0, 0, 0, 0.5);
+      }
+
+      .photo::before {
+        position: absolute;
+        inset: auto 0 0;
+        height: 42%;
+        content: "";
+        background:
+          linear-gradient(135deg, transparent 0 30%, rgba(255, 255, 255, 0.14) 31% 33%, transparent 34%),
+          linear-gradient(18deg, #111c17 0 42%, #5d7d4c 43% 62%, #20362a 63% 100%);
+      }
+
+      .photo-label {
+        position: absolute;
+        top: 14px;
+        left: 14px;
+        height: 30px;
+        padding: 0 10px;
+        color: #06120a;
+        font-size: 12px;
+        font-weight: 900;
+        line-height: 30px;
+        background: var(--green);
+        border-radius: 6px;
+      }
+
+      .decision-panel {
+        display: grid;
+        grid-template-columns: 1fr auto;
+        gap: 18px;
+        align-items: center;
+        min-height: 0;
+        padding: 18px 20px;
+        background: var(--panel);
+        border-top: 1px solid var(--line);
+      }
+
+      .asset-copy {
+        min-width: 0;
+      }
+
+      .asset-copy h2 {
+        overflow: hidden;
+        max-width: 660px;
+        text-overflow: ellipsis;
+        white-space: nowrap;
+      }
+
+      .decision-grid {
+        display: grid;
+        grid-template-columns: repeat(3, 94px);
+        gap: 8px;
+      }
+
+      .decision {
+        height: 44px;
+        color: var(--text);
+        cursor: pointer;
+        background: transparent;
+        border: 1px solid var(--line);
+        border-radius: 6px;
+      }
+
+      .decision.keep {
+        color: #05100a;
+        background: var(--green);
+        border-color: var(--green);
+      }
+
+      .decision.edit {
+        color: var(--amber);
+        border-color: rgba(216, 148, 53, 0.56);
+      }
+
+      .decision.reject {
+        color: var(--red);
+        border-color: rgba(215, 94, 102, 0.56);
+      }
+
+      .right {
+        display: grid;
+        grid-template-rows: auto minmax(0, 1fr);
+        min-height: 0;
+        background: var(--panel);
+        border-left: 1px solid var(--line);
+      }
+
+      .plan {
+        display: grid;
+        gap: 14px;
+        align-content: start;
+        padding: 16px;
+        border-bottom: 1px solid var(--line);
+      }
+
+      .bar {
+        display: grid;
+        gap: 8px;
+      }
+
+      .bar-row {
+        display: grid;
+        grid-template-columns: 54px minmax(0, 1fr) 28px;
+        gap: 8px;
+        align-items: center;
+        color: var(--muted);
+        font-size: 12px;
+      }
+
+      .track {
+        height: 8px;
+        overflow: hidden;
+        background: #2b312f;
+        border-radius: 999px;
+      }
+
+      .track span {
+        display: block;
+        width: var(--width);
+        height: 100%;
+        background: var(--color);
+      }
+
+      .metadata {
+        display: grid;
+        gap: 16px;
+        align-content: start;
+        min-height: 0;
+        padding: 16px;
+        overflow: auto;
+      }
+
+      .meta {
+        display: grid;
+        gap: 4px;
+      }
+
+      .meta span {
+        color: var(--subtle);
+        font-size: 12px;
+      }
+
+      .meta strong {
+        overflow-wrap: anywhere;
+        font-size: 13px;
+      }
+
+      footer {
+        grid-column: 1 / -1;
+        display: flex;
+        align-items: center;
+        justify-content: space-between;
+        min-width: 0;
+        padding: 0 14px;
+        color: var(--muted);
+        font-size: 12px;
+        background: #121615;
+        border-top: 1px solid var(--line);
+      }
+
+      footer span {
+        min-width: 0;
+        overflow: hidden;
+        text-overflow: ellipsis;
+        white-space: nowrap;
+      }
+
+      .i1 { --img: linear-gradient(30deg, #1b2d27 0 30%, #476b60 31% 55%, #d0ded8 56% 100%); --dot: var(--green); }
+      .i2 { --img: linear-gradient(150deg, #51242c 0 35%, #c17155 36% 59%, #efd2c8 60% 100%); --dot: var(--amber); }
+      .i3 { --img: linear-gradient(30deg, #1c261d 0 36%, #758c55 37% 62%, #dfe8c7 63% 100%); }
+      .i4 { --img: linear-gradient(135deg, #241d2f 0 32%, #6e5b91 33% 59%, #ddd7ed 60% 100%); --dot: var(--red); }
+      .i5 { --img: linear-gradient(30deg, #283736 0 37%, #64877f 38% 64%, #d6e4dd 65% 100%); --dot: var(--green); }
+      .i6 { --img: linear-gradient(145deg, #343026 0 38%, #84754e 39% 60%, #d7dfba 61% 100%); }
+      .i7 { --img: linear-gradient(34deg, #222936 0 38%, #657795 39% 61%, #d6dfed 62% 100%); --dot: var(--green); }
+      .i8 { --img: linear-gradient(150deg, #31242d 0 34%, #906473 35% 61%, #ead7dd 62% 100%); }
+    </style>
+  </head>
+  <body>
+    <div class="shell">
+      <header>
+        <div class="brand">
+          <span class="brand-icon">C</span>
+          <div>
+            <h1>Cullinary</h1>
+            <span>/Volumes/Photo/Ingest/2026-06-24 Ridge Session</span>
+          </div>
+        </div>
+        <div class="actions">
+          <button class="button" type="button">Open Folder</button>
+          <button class="button" type="button">Rescan</button>
+          <button class="button primary" type="button">Create Move Plan</button>
+        </div>
+      </header>
+
+      <aside class="queue" aria-label="Review queue">
+        <div class="queue-head">
+          <h2>Queue</h2>
+          <span>37 marked of 142</span>
+        </div>
+        <div class="queue-list">
+          <div class="queue-item active">
+            <span class="mini i1"></span>
+            <span class="queue-copy"><strong>DSC08421</strong><span>RAW + JPG</span></span>
+            <span class="dot"></span>
+          </div>
+          <div class="queue-item">
+            <span class="mini i2"></span>
+            <span class="queue-copy"><strong>DSC08422</strong><span>RAW</span></span>
+            <span class="dot"></span>
+          </div>
+          <div class="queue-item">
+            <span class="mini i3"></span>
+            <span class="queue-copy"><strong>DSC08423</strong><span>JPG</span></span>
+            <span class="dot"></span>
+          </div>
+          <div class="queue-item">
+            <span class="mini i4"></span>
+            <span class="queue-copy"><strong>DSC08424</strong><span>RAW + XMP</span></span>
+            <span class="dot"></span>
+          </div>
+          <div class="queue-item">
+            <span class="mini i5"></span>
+            <span class="queue-copy"><strong>DSC08425</strong><span>RAW</span></span>
+            <span class="dot"></span>
+          </div>
+          <div class="queue-item">
+            <span class="mini i6"></span>
+            <span class="queue-copy"><strong>DSC08426</strong><span>RAW</span></span>
+            <span class="dot"></span>
+          </div>
+          <div class="queue-item">
+            <span class="mini i7"></span>
+            <span class="queue-copy"><strong>DSC08427</strong><span>JPG</span></span>
+            <span class="dot"></span>
+          </div>
+          <div class="queue-item">
+            <span class="mini i8"></span>
+            <span class="queue-copy"><strong>DSC08428</strong><span>RAW</span></span>
+            <span class="dot"></span>
+          </div>
+        </div>
+      </aside>
+
+      <main class="main">
+        <section class="review">
+          <div class="photo" role="img" aria-label="Selected landscape photo mock preview">
+            <span class="photo-label">Keep</span>
+          </div>
+        </section>
+        <section class="decision-panel">
+          <div class="asset-copy">
+            <h2>DSC08421.ARW</h2>
+            <p>RAW + JPEG + XMP - 37 / 142</p>
+          </div>
+          <div class="decision-grid" aria-label="Decision controls">
+            <button class="decision keep" type="button">Keep</button>
+            <button class="decision edit" type="button">Edit</button>
+            <button class="decision reject" type="button">Reject</button>
+          </div>
+        </section>
+      </main>
+
+      <aside class="right" aria-label="Plan and metadata">
+        <section class="plan">
+          <div>
+            <h2>Move Plan</h2>
+            <p>0 conflicts</p>
+          </div>
+          <div class="bar">
+            <div class="bar-row">
+              <span>Keep</span>
+              <span class="track"><span style="--width: 64%; --color: var(--green)"></span></span>
+              <strong>24</strong>
+            </div>
+            <div class="bar-row">
+              <span>Edit</span>
+              <span class="track"><span style="--width: 24%; --color: var(--amber)"></span></span>
+              <strong>9</strong>
+            </div>
+            <div class="bar-row">
+              <span>Reject</span>
+              <span class="track"><span style="--width: 12%; --color: var(--red)"></span></span>
+              <strong>4</strong>
+            </div>
+          </div>
+        </section>
+        <section class="metadata">
+          <div class="meta">
+            <span>Filename</span>
+            <strong>DSC08421.ARW</strong>
+          </div>
+          <div class="meta">
+            <span>Decision</span>
+            <strong>Keep</strong>
+          </div>
+          <div class="meta">
+            <span>Asset Type</span>
+            <strong>RAW + JPEG + XMP</strong>
+          </div>
+          <div class="meta">
+            <span>Captured</span>
+            <strong>24 Jun 2026, 19:42</strong>
+          </div>
+          <div class="meta">
+            <span>Files</span>
+            <strong>DSC08421.ARW<br />DSC08421.JPG<br />DSC08421.XMP</strong>
+          </div>
+          <div class="meta">
+            <span>Destination</span>
+            <strong>Keep/DSC08421.*</strong>
+          </div>
+        </section>
+      </aside>
+
+      <footer>
+        <span>Ready</span>
+        <span>Preview cache warm - 0 conflicts</span>
+      </footer>
+    </div>
+  </body>
+</html>

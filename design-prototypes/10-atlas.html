@@ -1,0 +1,553 @@
+<!doctype html>
+<html lang="en">
+  <head>
+    <meta charset="utf-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1" />
+    <title>Cullinary Prototype 10 - Atlas</title>
+    <style>
+      :root {
+        color-scheme: dark;
+        --bg: #0a0c12;
+        --panel: #11141d;
+        --panel-2: #161a26;
+        --line: #232838;
+        --text: #eef1f8;
+        --muted: #9aa1b8;
+        --subtle: #626a86;
+        --keep: #46b888;
+        --edit: #e0a44a;
+        --reject: #e0656b;
+        --accent: #7c8cff;
+      }
+
+      * {
+        box-sizing: border-box;
+      }
+
+      body {
+        min-width: 1080px;
+        height: 100vh;
+        margin: 0;
+        overflow: hidden;
+        font-family:
+          Inter, ui-sans-serif, system-ui, -apple-system, BlinkMacSystemFont,
+          "Segoe UI", sans-serif;
+        color: var(--text);
+        background:
+          radial-gradient(120% 70% at 85% -5%, #15182a 0%, var(--bg) 55%),
+          var(--bg);
+      }
+
+      button {
+        font: inherit;
+      }
+
+      .shell {
+        display: grid;
+        grid-template-rows: 60px minmax(0, 1fr);
+        height: 100vh;
+      }
+
+      .topbar {
+        display: flex;
+        align-items: center;
+        justify-content: space-between;
+        padding: 0 26px;
+        border-bottom: 1px solid var(--line);
+      }
+
+      .brand {
+        display: flex;
+        gap: 12px;
+        align-items: center;
+      }
+
+      .logo {
+        display: grid;
+        width: 30px;
+        height: 30px;
+        place-items: center;
+        color: #0a0c12;
+        font-weight: 800;
+        background: #eef1f8;
+        border-radius: 8px;
+      }
+
+      .brand .t {
+        font-size: 15px;
+        font-weight: 700;
+      }
+
+      .brand .s {
+        font-size: 12px;
+        color: var(--muted);
+      }
+
+      .top-actions {
+        display: flex;
+        gap: 10px;
+      }
+
+      .tool {
+        display: inline-flex;
+        gap: 8px;
+        align-items: center;
+        height: 36px;
+        padding: 0 15px;
+        color: var(--text);
+        cursor: pointer;
+        background: var(--panel-2);
+        border: 1px solid var(--line);
+        border-radius: 8px;
+      }
+
+      .tool.primary {
+        color: #0a0c12;
+        font-weight: 700;
+        background: var(--accent);
+        border-color: var(--accent);
+      }
+
+      .board {
+        display: grid;
+        grid-template-columns: 320px minmax(0, 1fr) 300px;
+        gap: 18px;
+        min-height: 0;
+        padding: 18px 26px 26px;
+      }
+
+      .col {
+        display: grid;
+        gap: 18px;
+        min-height: 0;
+        align-content: start;
+      }
+
+      .card {
+        padding: 18px;
+        background: var(--panel);
+        border: 1px solid var(--line);
+        border-radius: 14px;
+      }
+
+      .card h3 {
+        margin: 0 0 14px;
+        font-size: 12px;
+        font-weight: 700;
+        letter-spacing: 0.8px;
+        text-transform: uppercase;
+        color: var(--subtle);
+      }
+
+      .donut-card {
+        display: grid;
+        grid-template-columns: auto 1fr;
+        gap: 18px;
+        align-items: center;
+      }
+
+      .donut {
+        position: relative;
+        width: 124px;
+        height: 124px;
+        border-radius: 999px;
+        background:
+          conic-gradient(
+            var(--keep) 0 60deg,
+            var(--edit) 60deg 83deg,
+            var(--reject) 83deg 93deg,
+            #20263a 93deg 360deg
+          );
+      }
+
+      .donut::after {
+        position: absolute;
+        inset: 16px;
+        content: "";
+        display: grid;
+        background: var(--panel);
+        border-radius: 999px;
+      }
+
+      .donut .center {
+        position: absolute;
+        inset: 0;
+        z-index: 1;
+        display: grid;
+        place-content: center;
+        justify-items: center;
+        gap: 1px;
+      }
+
+      .donut .center b {
+        font-size: 26px;
+        line-height: 1;
+      }
+
+      .donut .center span {
+        font-size: 11px;
+        color: var(--subtle);
+      }
+
+      .dist {
+        display: grid;
+        gap: 12px;
+      }
+
+      .dist .row {
+        display: grid;
+        grid-template-columns: 12px 1fr auto;
+        gap: 10px;
+        align-items: center;
+        font-size: 13px;
+      }
+
+      .dist .sw {
+        width: 12px;
+        height: 12px;
+        border-radius: 4px;
+      }
+
+      .dist .row b {
+        font-variant-numeric: tabular-nums;
+      }
+
+      .kpis {
+        display: grid;
+        grid-template-columns: repeat(3, 1fr);
+        gap: 12px;
+      }
+
+      .kpi {
+        padding: 14px;
+        background: var(--panel-2);
+        border: 1px solid var(--line);
+        border-radius: 12px;
+      }
+
+      .kpi b {
+        display: block;
+        font-size: 24px;
+        line-height: 1.1;
+      }
+
+      .kpi span {
+        font-size: 11px;
+        color: var(--muted);
+      }
+
+      .hero {
+        display: grid;
+        grid-template-rows: auto minmax(0, 1fr) auto;
+        min-height: 0;
+        padding: 0;
+        overflow: hidden;
+      }
+
+      .hero-head {
+        display: flex;
+        align-items: center;
+        justify-content: space-between;
+        padding: 14px 18px;
+        border-bottom: 1px solid var(--line);
+      }
+
+      .hero-head .name {
+        font-size: 14px;
+        font-weight: 600;
+      }
+
+      .hero-head .sub {
+        font-size: 12px;
+        color: var(--muted);
+      }
+
+      .hero-head .pos {
+        font-size: 12px;
+        color: var(--subtle);
+      }
+
+      .hero-photo {
+        position: relative;
+        min-height: 0;
+        margin: 16px 18px;
+        border-radius: 12px;
+        overflow: hidden;
+        background:
+          radial-gradient(76% 56% at 62% 26%, rgba(255, 226, 184, 0.82) 0 8%, transparent 30%),
+          linear-gradient(162deg, #16263c 0 38%, #315264 39% 56%, #b6885b 57% 76%, #efd6a8 77% 100%);
+      }
+
+      .hero-photo .badge {
+        position: absolute;
+        top: 14px;
+        right: 14px;
+        display: inline-flex;
+        gap: 7px;
+        align-items: center;
+        height: 32px;
+        padding: 0 13px;
+        color: #04140c;
+        font-size: 13px;
+        font-weight: 800;
+        background: var(--keep);
+        border-radius: 999px;
+      }
+
+      .hero-actions {
+        display: grid;
+        grid-template-columns: repeat(3, 1fr);
+        gap: 10px;
+        padding: 0 18px 18px;
+      }
+
+      .dbtn {
+        display: inline-flex;
+        gap: 10px;
+        align-items: center;
+        justify-content: center;
+        height: 48px;
+        color: var(--text);
+        cursor: pointer;
+        background: var(--panel-2);
+        border: 1px solid var(--line);
+        border-radius: 11px;
+      }
+
+      .dbtn .kc {
+        display: inline-grid;
+        min-width: 18px;
+        height: 18px;
+        padding: 0 5px;
+        place-items: center;
+        font-size: 11px;
+        font-weight: 700;
+        color: var(--subtle);
+        background: var(--bg);
+        border: 1px solid var(--line);
+        border-radius: 5px;
+      }
+
+      .dbtn.keep {
+        color: #04140c;
+        font-weight: 700;
+        background: var(--keep);
+        border-color: var(--keep);
+      }
+
+      .dbtn.keep .kc {
+        color: #04140c;
+        background: rgba(0, 0, 0, 0.14);
+        border-color: transparent;
+      }
+
+      .dbtn.edit:hover { border-color: rgba(224, 164, 74, 0.6); }
+      .dbtn.reject:hover { border-color: rgba(224, 101, 107, 0.6); }
+
+      .recent {
+        display: grid;
+        gap: 4px;
+        min-height: 0;
+        overflow-y: auto;
+      }
+
+      .ritem {
+        display: grid;
+        grid-template-columns: 38px 1fr auto;
+        gap: 11px;
+        align-items: center;
+        padding: 8px;
+        border-radius: 9px;
+      }
+
+      .ritem:hover {
+        background: var(--panel-2);
+      }
+
+      .rthumb {
+        width: 38px;
+        height: 30px;
+        border-radius: 6px;
+      }
+
+      .rn {
+        font-size: 13px;
+      }
+
+      .rt {
+        font-size: 11px;
+        color: var(--subtle);
+      }
+
+      .chip {
+        display: inline-flex;
+        gap: 5px;
+        align-items: center;
+        height: 22px;
+        padding: 0 9px;
+        font-size: 11px;
+        font-weight: 700;
+        border-radius: 999px;
+      }
+
+      .chip.keep { color: var(--keep); background: rgba(70, 184, 136, 0.14); }
+      .chip.edit { color: var(--edit); background: rgba(224, 164, 74, 0.14); }
+      .chip.reject { color: var(--reject); background: rgba(224, 101, 107, 0.14); }
+
+      .plan-row {
+        display: flex;
+        align-items: center;
+        justify-content: space-between;
+        padding: 10px 0;
+        font-size: 13px;
+        border-bottom: 1px solid var(--line);
+      }
+
+      .plan-row:last-of-type {
+        border-bottom: none;
+      }
+
+      .plan-row .muted {
+        color: var(--muted);
+      }
+
+      .conflict {
+        margin-top: 10px;
+        padding: 11px 13px;
+        font-size: 12px;
+        color: #f0d9ac;
+        background: rgba(224, 164, 74, 0.1);
+        border: 1px solid rgba(224, 164, 74, 0.3);
+        border-radius: 10px;
+      }
+
+      .full-btn {
+        width: 100%;
+        height: 44px;
+        margin-top: 14px;
+        color: #0a0c12;
+        font-weight: 700;
+        cursor: pointer;
+        background: var(--accent);
+        border: none;
+        border-radius: 10px;
+      }
+
+      svg {
+        display: block;
+      }
+    </style>
+  </head>
+  <body>
+    <div class="shell">
+      <header class="topbar">
+        <div class="brand">
+          <span class="logo">C</span>
+          <div>
+            <div class="t">Cullinary</div>
+            <div class="s">2026-06-24 Ridge Session &middot; /Volumes/Photo/Ingest</div>
+          </div>
+        </div>
+        <div class="top-actions">
+          <button class="tool" type="button">
+            <svg width="16" height="16" viewBox="0 0 24 24"><path d="M3 6.5h6l2 2h10v9.5a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2z" fill="none" stroke="currentColor" stroke-width="2" /></svg>
+            Open Folder
+          </button>
+          <button class="tool" type="button">
+            <svg width="16" height="16" viewBox="0 0 24 24"><path d="M20 12a8 8 0 1 1-2.4-5.7M20 4v6h-6" fill="none" stroke="currentColor" stroke-width="2" /></svg>
+            Rescan
+          </button>
+          <button class="tool primary" type="button">
+            <svg width="16" height="16" viewBox="0 0 24 24"><path d="M5 6h6M5 18h6M13 6h3a3 3 0 0 1 0 6h-8a3 3 0 0 0 0 6h3" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" /></svg>
+            Create Move Plan
+          </button>
+        </div>
+      </header>
+
+      <div class="board">
+        <div class="col">
+          <section class="card donut-card">
+            <div class="donut">
+              <div class="center"><b>26%</b><span>reviewed</span></div>
+            </div>
+            <div class="dist">
+              <div class="row"><i class="sw" style="background: var(--keep)"></i><span>Keep</span><b>24</b></div>
+              <div class="row"><i class="sw" style="background: var(--edit)"></i><span>Edit</span><b>9</b></div>
+              <div class="row"><i class="sw" style="background: var(--reject)"></i><span>Reject</span><b>4</b></div>
+              <div class="row"><i class="sw" style="background: #20263a"></i><span>Unmarked</span><b>105</b></div>
+            </div>
+          </section>
+
+          <section class="card">
+            <h3>Session</h3>
+            <div class="kpis">
+              <div class="kpi"><b>142</b><span>Assets</span></div>
+              <div class="kpi"><b>37</b><span>Marked</span></div>
+              <div class="kpi"><b>105</b><span>Left</span></div>
+            </div>
+          </section>
+
+          <section class="card">
+            <h3>Recently decided</h3>
+            <div class="recent">
+              <div class="ritem"><span class="rthumb" style="background: linear-gradient(160deg,#16273a,#c79a6a)"></span><div><div class="rn">DSC08420.ARW</div><div class="rt">2s ago</div></div><span class="chip keep">Keep</span></div>
+              <div class="ritem"><span class="rthumb" style="background: linear-gradient(150deg,#241c18,#cbd3b4)"></span><div><div class="rn">DSC08419.ARW</div><div class="rt">8s ago</div></div><span class="chip edit">Edit</span></div>
+              <div class="ritem"><span class="rthumb" style="background: linear-gradient(135deg,#211820,#f2d7de)"></span><div><div class="rn">DSC08418.JPG</div><div class="rt">14s ago</div></div><span class="chip reject">Reject</span></div>
+              <div class="ritem"><span class="rthumb" style="background: linear-gradient(28deg,#14231d,#cdd4c6)"></span><div><div class="rn">DSC08417.ARW</div><div class="rt">21s ago</div></div><span class="chip keep">Keep</span></div>
+            </div>
+          </section>
+        </div>
+
+        <section class="card hero">
+          <div class="hero-head">
+            <div>
+              <div class="name">DSC08421.ARW</div>
+              <div class="sub">RAW + JPEG + XMP &middot; Sony A7 IV &middot; 1/640 f4.0 ISO200</div>
+            </div>
+            <div class="pos">37 / 142</div>
+          </div>
+          <div class="hero-photo" role="img" aria-label="Selected photo preview">
+            <span class="badge">
+              <svg width="15" height="15" viewBox="0 0 24 24"><path d="M5 13l4 4 10-11" fill="none" stroke="currentColor" stroke-width="2.6" stroke-linecap="round" stroke-linejoin="round" /></svg>
+              Keep
+            </span>
+          </div>
+          <div class="hero-actions">
+            <button class="dbtn reject" type="button">
+              <svg width="18" height="18" viewBox="0 0 24 24"><path d="M6 6l12 12M18 6L6 18" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round" /></svg>
+              Reject <span class="kc">X</span>
+            </button>
+            <button class="dbtn keep" type="button">
+              <svg width="18" height="18" viewBox="0 0 24 24"><path d="M5 13l4 4 10-11" fill="none" stroke="currentColor" stroke-width="2.4" stroke-linecap="round" stroke-linejoin="round" /></svg>
+              Keep <span class="kc">P</span>
+            </button>
+            <button class="dbtn edit" type="button">
+              <svg width="18" height="18" viewBox="0 0 24 24"><path d="M4 20l4-1L19 8l-3-3L5 16l-1 4z" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" /></svg>
+              Edit <span class="kc">E</span>
+            </button>
+          </div>
+        </section>
+
+        <div class="col">
+          <section class="card">
+            <h3>Move plan preview</h3>
+            <div class="plan-row"><span>_keep</span><span class="muted">24 assets</span></div>
+            <div class="plan-row"><span>_edit</span><span class="muted">9 assets</span></div>
+            <div class="plan-row"><span>_reject</span><span class="muted">4 assets</span></div>
+            <div class="conflict">2 destination conflicts &mdash; resolve with skip or rename before moving.</div>
+            <button class="full-btn" type="button">Review &amp; Move 37 Assets</button>
+          </section>
+
+          <section class="card">
+            <h3>Tips</h3>
+            <div class="dist">
+              <div class="row"><i class="sw" style="background: var(--accent)"></i><span>P / E / X mark &amp; advance</span><b></b></div>
+              <div class="row"><i class="sw" style="background: var(--accent)"></i><span>&larr; &rarr; navigate</span><b></b></div>
+              <div class="row"><i class="sw" style="background: var(--accent)"></i><span>Space toggles 100% loupe</span><b></b></div>
+            </div>
+          </section>
+        </div>
+      </div>
+    </div>
+  </body>
+</html>

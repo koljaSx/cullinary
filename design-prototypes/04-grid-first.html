@@ -1,0 +1,506 @@
+<!doctype html>
+<html lang="en">
+  <head>
+    <meta charset="utf-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1" />
+    <title>Cullinary Prototype 04 - Grid First</title>
+    <style>
+      :root {
+        color-scheme: light;
+        --bg: #eef1f3;
+        --panel: #ffffff;
+        --ink: #1b2228;
+        --muted: #68747e;
+        --subtle: #8c98a1;
+        --line: #d6dde3;
+        --line-strong: #14191e;
+        --blue: #256db4;
+        --green: #2b9862;
+        --amber: #bd7c1c;
+        --red: #cc4f58;
+        --violet: #6c57b8;
+      }
+
+      * {
+        box-sizing: border-box;
+      }
+
+      body {
+        min-width: 1080px;
+        height: 100vh;
+        margin: 0;
+        overflow: hidden;
+        font-family:
+          Inter, ui-sans-serif, system-ui, -apple-system, BlinkMacSystemFont,
+          "Segoe UI", sans-serif;
+        color: var(--ink);
+        letter-spacing: 0;
+        background: var(--bg);
+      }
+
+      button {
+        font: inherit;
+      }
+
+      .shell {
+        display: grid;
+        grid-template-columns: minmax(0, 1fr) 390px;
+        grid-template-rows: 62px 48px minmax(0, 1fr) 32px;
+        height: 100vh;
+      }
+
+      header {
+        grid-column: 1 / -1;
+        display: flex;
+        align-items: center;
+        justify-content: space-between;
+        gap: 18px;
+        min-width: 0;
+        padding: 0 16px;
+        background: var(--panel);
+        border-bottom: 1px solid var(--line);
+      }
+
+      .brand {
+        display: flex;
+        gap: 14px;
+        align-items: center;
+        min-width: 0;
+      }
+
+      .mark {
+        display: grid;
+        width: 34px;
+        height: 34px;
+        place-items: center;
+        color: #ffffff;
+        font-weight: 800;
+        background: var(--blue);
+        border-radius: 8px;
+      }
+
+      .brand-copy {
+        min-width: 0;
+      }
+
+      h1 {
+        margin: 0 0 3px;
+        font-size: 16px;
+      }
+
+      .folder {
+        overflow: hidden;
+        color: var(--muted);
+        font-size: 12px;
+        text-overflow: ellipsis;
+        white-space: nowrap;
+      }
+
+      .actions {
+        display: flex;
+        gap: 8px;
+        align-items: center;
+      }
+
+      .button {
+        height: 34px;
+        padding: 0 12px;
+        color: var(--ink);
+        cursor: pointer;
+        background: #f8fafb;
+        border: 1px solid var(--line);
+        border-radius: 6px;
+      }
+
+      .button.primary {
+        color: #ffffff;
+        background: var(--blue);
+        border-color: var(--blue);
+      }
+
+      .filters {
+        grid-column: 1 / 2;
+        display: flex;
+        gap: 8px;
+        align-items: center;
+        padding: 0 16px;
+        background: var(--panel);
+        border-bottom: 1px solid var(--line);
+      }
+
+      .chip {
+        height: 30px;
+        padding: 0 12px;
+        color: var(--muted);
+        cursor: pointer;
+        background: transparent;
+        border: 1px solid var(--line);
+        border-radius: 999px;
+      }
+
+      .chip.active {
+        color: #ffffff;
+        background: var(--ink);
+        border-color: var(--ink);
+      }
+
+      .quick-stats {
+        grid-column: 2 / 3;
+        display: grid;
+        grid-template-columns: repeat(3, 1fr);
+        align-items: center;
+        background: var(--panel);
+        border-bottom: 1px solid var(--line);
+        border-left: 1px solid var(--line);
+      }
+
+      .stat {
+        display: grid;
+        gap: 2px;
+        justify-items: center;
+        font-size: 12px;
+        color: var(--muted);
+      }
+
+      .stat strong {
+        color: var(--ink);
+        font-size: 16px;
+      }
+
+      .grid {
+        display: grid;
+        grid-template-columns: repeat(5, minmax(134px, 1fr));
+        gap: 12px;
+        align-content: start;
+        min-width: 0;
+        min-height: 0;
+        padding: 16px;
+        overflow: auto;
+      }
+
+      .asset {
+        position: relative;
+        display: grid;
+        grid-template-rows: minmax(0, 1fr) 34px;
+        aspect-ratio: 1 / 0.86;
+        overflow: hidden;
+        background: var(--panel);
+        border: 2px solid transparent;
+        border-radius: 8px;
+        box-shadow: 0 1px 2px rgba(20, 25, 30, 0.05);
+      }
+
+      .asset.selected {
+        border-color: var(--line-strong);
+      }
+
+      .preview {
+        position: relative;
+        min-height: 0;
+        background: var(--image);
+      }
+
+      .preview::after {
+        position: absolute;
+        right: 8px;
+        bottom: 8px;
+        min-width: 22px;
+        height: 20px;
+        padding: 0 6px;
+        color: #ffffff;
+        font-size: 11px;
+        font-weight: 800;
+        line-height: 20px;
+        text-align: center;
+        content: attr(data-mark);
+        background: var(--badge, transparent);
+        border-radius: 999px;
+      }
+
+      .asset footer {
+        display: flex;
+        align-items: center;
+        justify-content: space-between;
+        min-width: 0;
+        padding: 0 9px;
+        background: var(--panel);
+        border-top: 1px solid var(--line);
+      }
+
+      .name {
+        overflow: hidden;
+        font-size: 12px;
+        font-weight: 700;
+        text-overflow: ellipsis;
+        white-space: nowrap;
+      }
+
+      .type {
+        color: var(--subtle);
+        font-size: 11px;
+      }
+
+      aside {
+        grid-column: 2 / 3;
+        grid-row: 3 / 4;
+        display: grid;
+        grid-template-rows: minmax(0, 1fr) auto;
+        min-height: 0;
+        background: var(--panel);
+        border-left: 1px solid var(--line);
+      }
+
+      .detail-preview {
+        display: grid;
+        gap: 16px;
+        align-content: start;
+        min-height: 0;
+        padding: 16px;
+        overflow: auto;
+      }
+
+      .side-photo {
+        position: relative;
+        aspect-ratio: 1 / 0.72;
+        overflow: hidden;
+        background:
+          radial-gradient(circle at 72% 23%, rgba(255, 236, 185, 0.76) 0 7%, transparent 8%),
+          linear-gradient(34deg, #17272b 0 36%, #577a86 37% 62%, #c8dde1 63% 100%);
+        border: 1px solid var(--line);
+        border-radius: 6px;
+      }
+
+      .side-photo::after {
+        position: absolute;
+        inset: auto 0 0;
+        height: 38%;
+        content: "";
+        background: linear-gradient(22deg, #173126 0 45%, #879d67 46% 66%, #263b2d 67% 100%);
+      }
+
+      .detail-title {
+        display: flex;
+        align-items: start;
+        justify-content: space-between;
+        gap: 18px;
+      }
+
+      .detail-title h2 {
+        margin: 0 0 5px;
+        font-size: 16px;
+      }
+
+      .detail-title span {
+        color: var(--muted);
+        font-size: 12px;
+      }
+
+      .status-pill {
+        flex: 0 0 auto;
+        height: 26px;
+        padding: 0 10px;
+        color: #ffffff;
+        font-size: 12px;
+        font-weight: 800;
+        line-height: 26px;
+        background: var(--green);
+        border-radius: 999px;
+      }
+
+      .metadata {
+        display: grid;
+        grid-template-columns: repeat(2, minmax(0, 1fr));
+        gap: 14px;
+      }
+
+      .metadata div {
+        display: grid;
+        gap: 3px;
+      }
+
+      .metadata span {
+        color: var(--subtle);
+        font-size: 12px;
+      }
+
+      .metadata strong {
+        overflow-wrap: anywhere;
+        font-size: 13px;
+      }
+
+      .decisions {
+        display: grid;
+        grid-template-columns: repeat(3, 1fr);
+        gap: 8px;
+        padding: 16px;
+        border-top: 1px solid var(--line);
+      }
+
+      .decision {
+        height: 42px;
+        cursor: pointer;
+        background: transparent;
+        border: 1px solid var(--line);
+        border-radius: 6px;
+      }
+
+      .decision.keep {
+        color: #ffffff;
+        background: var(--green);
+        border-color: var(--green);
+      }
+
+      .decision.edit {
+        color: var(--amber);
+        border-color: rgba(189, 124, 28, 0.48);
+      }
+
+      .decision.reject {
+        color: var(--red);
+        border-color: rgba(204, 79, 88, 0.48);
+      }
+
+      .statusbar {
+        grid-column: 1 / -1;
+        display: flex;
+        align-items: center;
+        justify-content: space-between;
+        min-width: 0;
+        padding: 0 14px;
+        color: var(--muted);
+        font-size: 12px;
+        background: var(--panel);
+        border-top: 1px solid var(--line);
+      }
+
+      .statusbar span {
+        min-width: 0;
+        overflow: hidden;
+        text-overflow: ellipsis;
+        white-space: nowrap;
+      }
+
+      .i1 { --image: linear-gradient(34deg, #17272b 0 36%, #577a86 37% 62%, #c8dde1 63% 100%); --badge: var(--green); }
+      .i2 { --image: linear-gradient(150deg, #4e2430 0 33%, #c36e56 34% 58%, #efd2c6 59% 100%); --badge: var(--amber); }
+      .i3 { --image: linear-gradient(30deg, #1a271c 0 38%, #6d8755 39% 64%, #dce7c9 65% 100%); }
+      .i4 { --image: linear-gradient(135deg, #221b32 0 31%, #6e5a9b 32% 59%, #ddd8ee 60% 100%); --badge: var(--red); }
+      .i5 { --image: linear-gradient(30deg, #28241e 0 31%, #8d7b53 32% 58%, #dbe2bf 59% 100%); --badge: var(--green); }
+      .i6 { --image: linear-gradient(145deg, #283439 0 36%, #607d89 37% 62%, #d4e2e5 63% 100%); }
+      .i7 { --image: linear-gradient(34deg, #232733 0 38%, #63718e 39% 60%, #d8dfec 61% 100%); --badge: var(--green); }
+      .i8 { --image: linear-gradient(150deg, #32222a 0 34%, #9a6572 35% 61%, #ead4d9 62% 100%); }
+      .i9 { --image: linear-gradient(30deg, #21312a 0 35%, #6a8b7a 36% 61%, #d9e5dd 62% 100%); --badge: var(--amber); }
+      .i10 { --image: linear-gradient(135deg, #1b2228 0 32%, #526c8b 33% 59%, #d1dfea 60% 100%); }
+    </style>
+  </head>
+  <body>
+    <div class="shell">
+      <header>
+        <div class="brand">
+          <span class="mark">C</span>
+          <div class="brand-copy">
+            <h1>Cullinary</h1>
+            <div class="folder">/Volumes/Photo/Ingest/2026-06-24 Ridge Session</div>
+          </div>
+        </div>
+        <div class="actions">
+          <button class="button" type="button">Open Folder</button>
+          <button class="button" type="button">Rescan</button>
+          <button class="button primary" type="button">Move Plan</button>
+        </div>
+      </header>
+
+      <nav class="filters" aria-label="Asset filters">
+        <button class="chip active" type="button">All</button>
+        <button class="chip" type="button">Unmarked</button>
+        <button class="chip" type="button">Keep</button>
+        <button class="chip" type="button">Edit</button>
+        <button class="chip" type="button">Reject</button>
+      </nav>
+
+      <section class="quick-stats" aria-label="Decision counts">
+        <div class="stat"><strong>24</strong><span>Keep</span></div>
+        <div class="stat"><strong>9</strong><span>Edit</span></div>
+        <div class="stat"><strong>4</strong><span>Reject</span></div>
+      </section>
+
+      <main class="grid" aria-label="Photo grid">
+        <article class="asset selected">
+          <div class="preview i1" data-mark="K"></div>
+          <footer><span class="name">DSC08421</span><span class="type">RAW</span></footer>
+        </article>
+        <article class="asset">
+          <div class="preview i2" data-mark="E"></div>
+          <footer><span class="name">DSC08422</span><span class="type">RAW</span></footer>
+        </article>
+        <article class="asset">
+          <div class="preview i3"></div>
+          <footer><span class="name">DSC08423</span><span class="type">JPG</span></footer>
+        </article>
+        <article class="asset">
+          <div class="preview i4" data-mark="X"></div>
+          <footer><span class="name">DSC08424</span><span class="type">RAW</span></footer>
+        </article>
+        <article class="asset">
+          <div class="preview i5" data-mark="K"></div>
+          <footer><span class="name">DSC08425</span><span class="type">RAW</span></footer>
+        </article>
+        <article class="asset">
+          <div class="preview i6"></div>
+          <footer><span class="name">DSC08426</span><span class="type">RAW</span></footer>
+        </article>
+        <article class="asset">
+          <div class="preview i7" data-mark="K"></div>
+          <footer><span class="name">DSC08427</span><span class="type">JPG</span></footer>
+        </article>
+        <article class="asset">
+          <div class="preview i8"></div>
+          <footer><span class="name">DSC08428</span><span class="type">RAW</span></footer>
+        </article>
+        <article class="asset">
+          <div class="preview i9" data-mark="E"></div>
+          <footer><span class="name">DSC08429</span><span class="type">RAW</span></footer>
+        </article>
+        <article class="asset">
+          <div class="preview i10"></div>
+          <footer><span class="name">DSC08430</span><span class="type">RAW</span></footer>
+        </article>
+        <article class="asset"><div class="preview i3"></div><footer><span class="name">DSC08431</span><span class="type">JPG</span></footer></article>
+        <article class="asset"><div class="preview i5" data-mark="K"></div><footer><span class="name">DSC08432</span><span class="type">RAW</span></footer></article>
+        <article class="asset"><div class="preview i2"></div><footer><span class="name">DSC08433</span><span class="type">RAW</span></footer></article>
+        <article class="asset"><div class="preview i6"></div><footer><span class="name">DSC08434</span><span class="type">RAW</span></footer></article>
+        <article class="asset"><div class="preview i8" data-mark="X"></div><footer><span class="name">DSC08435</span><span class="type">RAW</span></footer></article>
+      </main>
+
+      <aside aria-label="Selected photo detail">
+        <section class="detail-preview">
+          <div class="side-photo" role="img" aria-label="Selected landscape photo mock preview"></div>
+          <div class="detail-title">
+            <div>
+              <h2>DSC08421.ARW</h2>
+              <span>RAW + JPEG + XMP</span>
+            </div>
+            <span class="status-pill">Keep</span>
+          </div>
+          <div class="metadata">
+            <div><span>Position</span><strong>37 / 142</strong></div>
+            <div><span>Captured</span><strong>19:42</strong></div>
+            <div><span>Camera</span><strong>Sony A7 IV</strong></div>
+            <div><span>Conflicts</span><strong>0</strong></div>
+            <div><span>Files</span><strong>ARW, JPG, XMP</strong></div>
+            <div><span>Folder</span><strong>Ridge Session</strong></div>
+          </div>
+        </section>
+        <div class="decisions" aria-label="Decision controls">
+          <button class="decision keep" type="button">Keep</button>
+          <button class="decision edit" type="button">Edit</button>
+          <button class="decision reject" type="button">Reject</button>
+        </div>
+      </aside>
+
+      <footer class="statusbar">
+        <span>Ready</span>
+        <span>142 assets - 37 marked - 0 conflicts</span>
+      </footer>
+    </div>
+  </body>
+</html>

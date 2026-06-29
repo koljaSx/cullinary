@@ -48,6 +48,18 @@ Add support for viewing, adding, and updating geo data for images in a later ver
 
 Reason for deferral: version one focuses on fast review, decisions, and folder organization. Geo workflows need a clearer metadata model, EXIF write strategy, and UI for setting or correcting locations.
 
+### Grid View
+
+Add a grid view for quickly scanning many assets at once, with clear visual decision states and a path back into focused single-image review.
+
+Reason for deferral: version one should optimize the primary one-at-a-time review flow first. A grid view adds selection, navigation, thumbnail density, and state-sync complexity that can be designed after the core workflow is stable.
+
+### Comparison Feature
+
+Add a comparison feature for reviewing similar assets side by side and choosing the strongest image from a set.
+
+Reason for deferral: version one handles individual image decisions. Comparison workflows need additional interaction design for grouping, synchronized zoom or pan behavior, keyboard controls, and how the final decision applies across compared assets.
+
 ### Hardware-Accelerated Rendering
 
 Re-enable and tune hardware acceleration after the local v1 workflow is stable.
